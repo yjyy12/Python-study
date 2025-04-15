@@ -11,7 +11,7 @@ left, top, right, bottom = font.getbbox(text)
 
 pad = 20 #여백
 bg_width = pad + right + pad # 메시지 너비에 여백 추가
-bg_height = pad + right + pad # 메시지 높이에 여백 추가
+bg_height = pad + bottom + pad # 메시지 높이에 여백 추가
 
 img_bg = Image.new("RGBA", size=img_raw.size) # 배경 이미지 생성
 draw_bg = ImageDraw.Draw(img_bg) # 배경 이미지를 위한 ImageDraw 객체 생성
