@@ -17,5 +17,5 @@ async def fetch_trends_by_filter(category: str = None, option: str = None):
 
 if __name__ == "__main__":
     category, option = "패션의류", "10대 여성"
-    asyncio.run(fetch_trends_by_filter(category, option))  # 수정!
+    asyncio.run(fetch_trends_by_filter(category, option)) 
 
