@@ -1,31 +1,44 @@
 import json
 from pathlib import Path
-from playwright.sync_api import Page
+from playwright.async_api import async_playwright, Page
 from step_1_1 import OUT_DIR  # 이전에 작성한 모듈을 불러옵니다.
 from step_1_2 import run_playwright
 
+OUT_DIR.mkdir(exist_ok=True)
 OUT_1_3 = OUT_DIR / f"{Path(__file__).stem}.json"
 
-def goto_market_cap(page: Page):
-    page.goto("https://finance.naver.com")
-    page.get_by_role("link", name="국내증시").click()
-    page.get_by_role("link", name="시가총액", exact=True).click()
+async def goto_market_cap(page: Page):
+    await page.goto("https://finance.naver.com")
+    await page.get_by_role("link", name="국내증시").click()
+    await page.get_by_role("link", name="시가총액", exact=True).click()
 
-def parse_table_kospi(page: Page) -> tuple[list, list]:
-    tag_table = page.locator("table", has_text="코스피")  # 코스피 시가총액 표
-    tag_thead = tag_table.locator("thead > tr > th")  # 헤더 열
-    header = tag_thead.all_inner_texts()
-    tag_tbody = tag_table.locator("tbody > tr")  # 보디 행
-    body = [tr.locator("td").all_inner_texts() for tr in tag_tbody.all()]
+async def parse_table_kospi(page: Page) -> tuple[list, list]:
+    tag_table = page.locator("table", has_text="코스피")
+    tag_thead = tag_table.locator("thead > tr > th")
+    header = await tag_thead.all_inner_texts()
+    tag_tbody = tag_table.locator("tbody > tr")
+    body = [await tr.locator("td").all_inner_texts() for tr in await tag_tbody.all()]
     return header, body
 
+async def main():
+    async with async_playwright() as play:
+        browser = await play.chromium.launch(headless=False, slow_mo=1000)
+        page = await browser.new_page()
+        
+        await goto_market_cap(page)
+        header, body = await parse_table_kospi(page)
+        
+        dumped = json.dumps(dict(header=header, body=body), ensure_ascii=False, indent=2)
+        ######해당 부분 추가해주세요######
+        print("저장할 경로:", OUT_1_3.resolve())
+        print("헤더 길이:", len(header))
+        print("바디 길이:", len(body))
+        ######해당 부분 추가해주세요######
+        OUT_1_3.write_text(dumped, encoding="utf-8")
+        
+        await browser.close()
+
+# 이벤트 루프 실행
 if __name__ == "__main__":
-    play, browser, page = run_playwright(slow_mo=1000)
-    goto_market_cap(page)  # 시가총액 페이지로 이동
-    header, body = parse_table_kospi(page)  # 코스피 시가총액 데이터 수집
-    dumped = json.dumps(dict(header=header, body=body), ensure_ascii=False, indent=2)
-    OUT_1_3.write_text(dumped, encoding="utf-8")  # JSON으로 저장
-
-    browser.close()
-    play.stop()
-
+    import asyncio
+    asyncio.run(main())
