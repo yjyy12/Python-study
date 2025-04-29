@@ -10,7 +10,7 @@ OUT_1_3 = OUT_DIR / f"{Path(__file__).stem}.json"
 async def goto_market_cap(page: Page):
     await page.goto("https://finance.naver.com")
     await page.get_by_role("link", name="국내증시").click()
-    await page.get_by_role("link", name="시가총액", exact=True).click()
+    await page.get_by_role("link", name="시가총액").first.click() #이부분 문법이 잘못되어 있었어요 수정했어요
 
 async def parse_table_kospi(page: Page) -> tuple[list, list]:
     tag_table = page.locator("table", has_text="코스피")
