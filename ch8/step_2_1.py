@@ -5,7 +5,7 @@ from datakart import Ecos
 
 from step_1_1 import OUT_DIR  # 이전에 작성한 모듈을 불러옵니다.
 
-ECOS_KEY = "VBEYVXZDE8Z81NO9SAGG"  # ECOS API 인증키 입력
+ECOS_KEY = "API_KEY"  # ECOS API 인증키 입력
 ecos = Ecos(ECOS_KEY)  # Ecos 객체 생성
 resp = ecos.stat_search(  # 통계 조회 API 호출
     stat_code="722Y001",  # 통계표코드
