@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from docx import Document  # 수정: 제대로 임포트해야 해!
+from docx import Document  
 from docx.document import Document as DocumentObject
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.shared import Cm
