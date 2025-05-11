@@ -2,11 +2,9 @@ from pathlib import Path
 
 import pandas as pd
 from datakart import Ecos
-
 from step_1_1 import OUT_DIR  # 이전에 작성한 모듈을 불러옵니다.
 
 OUT_2_1 = OUT_DIR / f"{Path(__file__).stem}.xlsx"
-
 
 def indicators_to_xlsx():
     ECOS_KEY = "ECOS API 인증키"  # ECOS API 인증키 입력
@@ -29,7 +27,6 @@ def indicators_to_xlsx():
             )
             df_raw = pd.DataFrame(resp)  
             df_raw.to_excel(writer, sheet_name=name, index=False)  # 엑셀로 저장
-
 
 if __name__ == "__main__":
     indicators_to_xlsx()
